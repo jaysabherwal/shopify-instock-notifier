@@ -1,0 +1,12 @@
+{
+    "channel_id": "",
+    "poll_time_ms": 60000,
+    "scrapes": [
+        {
+            "name": "",
+            "link": ""
+        }
+    ]
+}
+
+
