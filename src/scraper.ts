@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, MessagePayload, TextChannel } from "discord.js";
+import { Client, Events, GatewayIntentBits, TextChannel } from "discord.js";
 import { readFileSync } from "node:fs";
 import { Browser, LaunchOptions } from "puppeteer";
 import puppeteer from "puppeteer-extra";
@@ -39,7 +39,7 @@ export class Scraper {
 
         while (true) {
             const page = await this.browser.newPage();
-            for (let scrape of settings.scrapes) {
+            for (const scrape of settings.scrapes) {
                 console.info(`Scraping ${scrape.name}`);
 
                 await page.goto(scrape.link);
