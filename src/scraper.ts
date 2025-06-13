@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { Browser, LaunchOptions } from "puppeteer";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import logger from "./logger";
 
 interface Settings {
     channel_id: string;
@@ -30,7 +31,7 @@ export class Scraper {
     }
 
     setupScrapes = async (location: string) => {
-        console.info("Setting up scrapes")
+        logger.info("Setting up scrapes")
         const str: string  = readFileSync(location).toString();
         
         // Loose parsing - no validation
@@ -38,22 +39,26 @@ export class Scraper {
 
 
         while (true) {
-            const page = await this.browser.newPage();
-            for (const scrape of settings.scrapes) {
-                console.info(`Scraping ${scrape.name}`);
+            try {
+                const page = await this.browser.newPage();
+                for (const scrape of settings.scrapes) {
+                    logger.info(`Scraping ${scrape.name}`);
 
-                await page.goto(scrape.link);
-                
-                const disabledElement = await page.$('shopify-accelerated-checkout[disabled]');
+                    await page.goto(scrape.link);
+                    
+                    const disabledElement = await page.$('shopify-accelerated-checkout[disabled]');
 
-                if (!disabledElement) {
-                    await (this.client.channels.cache.get(settings.channel_id) as TextChannel).send(`Scrape triggered! **${scrape.name}**, ${scrape.link}`);
+                    if (!disabledElement) {
+                        await (this.client.channels.cache.get(settings.channel_id) as TextChannel).send(`Scrape triggered! **${scrape.name}**, ${scrape.link}`);
+                    }
+
                 }
-
+                
+                await page.close();
+                await this.timeout(settings.poll_time_ms);
+            } catch (err) {
+                logger.error('Caught error, continuing')
             }
-            
-            await page.close();
-            await this.timeout(settings.poll_time_ms);
         }
     };
 
@@ -63,14 +68,14 @@ export class Scraper {
         });
 
         this.client.on(Events.ClientReady, () => {
-            console.info(`Logged in as ${this.client.user.tag}`);
+            logger.info(`Logged in as ${this.client.user.tag}`);
         });
 
         this.client.on(Events.ShardDisconnect, () => {
-            console.info(`Disconnected`);
+            logger.info(`Disconnected`);
         });
 
-        await this.client.login(process.env.DISCORD_TOKEN).catch((e) => console.error(e));
+        await this.client.login(process.env.DISCORD_TOKEN).catch((e) => logger.error(e));
     };
 
     setupPuppeteer = async () => {
