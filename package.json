@@ -1,5 +1,5 @@
 {
-  "name": "shopify-stock-checker",
+  "name": "shopify-instock-notifier",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
