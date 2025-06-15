@@ -17,8 +17,8 @@ interface Scrape {
 }
 
 export class Scraper {
-    client: Client;
-    browser: Browser;
+    private client: Client;
+    private browser: Browser;
 
     setup = async (location: string) => {
         await this.setupDiscordClient();
@@ -26,11 +26,11 @@ export class Scraper {
         await this.setupScrapes(location);
     };
 
-    timeout = (ms: number) => {
+    private timeout = (ms: number) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    setupScrapes = async (location: string) => {
+    private setupScrapes = async (location: string) => {
         logger.info("Setting up scrapes")
         const str: string  = readFileSync(location).toString();
         
@@ -62,7 +62,7 @@ export class Scraper {
         }
     };
 
-    setupDiscordClient = async () => {
+    private setupDiscordClient = async () => {
         this.client = new Client({
             intents: [GatewayIntentBits.Guilds],
         });
@@ -78,7 +78,7 @@ export class Scraper {
         await this.client.login(process.env.DISCORD_TOKEN).catch((e) => logger.error(e));
     };
 
-    setupPuppeteer = async () => {
+    private setupPuppeteer = async () => {
         puppeteer.use(StealthPlugin());
 
         const launchOptions: LaunchOptions = {
