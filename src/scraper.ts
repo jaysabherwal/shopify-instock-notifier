@@ -57,7 +57,8 @@ export class Scraper {
                 await page.close();
                 await this.timeout(settings.poll_time_ms);
             } catch (err) {
-                logger.error('Caught error, continuing')
+                logger.error('Caught error, exiting for restart');
+                process.exit();
             }
         }
     };
