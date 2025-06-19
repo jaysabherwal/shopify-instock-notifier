@@ -13,4 +13,5 @@
    * Fill out the Discord bot token
 3. Run `npm install`
 4. Run `npm run build`
-5. Run `pm2 start dist/index.js`
+5. Install pm2: `npm install pm2 -g`
+6. Run `pm2 start dist/index.js`
