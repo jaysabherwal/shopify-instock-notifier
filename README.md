@@ -1,5 +1,15 @@
 ### Shopify Instock Notifier
 
+This application will use Puppeteer to scrape the shopify links provided and  
+then send a notification to a discord channel if it is in stock.
+
+You can specify the poll time, which is the amount of time to wait inbetween checks.
+
+It will run on `pm2` which restarts the application if there is an error.
+
+The application is stateless, so if the item is instock over multiple checks of the app,   
+it will send a message each time.
+
 ## Installation & Running
 
 1. Copy `_scraper_settings_template.json` -> `scraper_settings.json`
